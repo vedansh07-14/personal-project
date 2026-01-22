@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Happy Marriage Anniversary</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- React -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(120deg, #ffecd2, #fcb69f, #f6d365);
+      background-size: 300% 300%;
+      animation: bgMove 14s ease infinite;
+      color: #3b1f14;
+      overflow-x: hidden;
+    }
+
+    @keyframes bgMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    header {
+      height: 100vh;
+      background:
+        linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.7)),
+        url('https://images.unsplash.com/photo-1526045478516-99145907023c') center/cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      animation: fadeIn 2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      text-shadow: 0 10px 30px rgba(0,0,0,.6);
+    }
+
+    section {
+      padding: 90px 20px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .title {
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 2.6rem;
+      margin-bottom: 40px;
+    }
+
+    .glass {
+      background: rgba(255,255,255,.35);
+      backdrop-filter: blur(14px);
+      padding: 35px;
+      border-radius: 22px;
+      box-shadow: 0 20px 45px rgba(0,0,0,.15);
+      margin-bottom: 40px;
+      text-align: center;
+      animation: slideUp 1s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Quotes */
+    .quote {
+      font-size: 1.35rem;
+      font-style: italic;
+      line-height: 1.8;
+      transition: opacity .6s;
+    }
+
+    /* Hearts */
+    .heart {
+      position: fixed;
+      bottom: -20px;
+      color: #ff4d6d;
+      animation: floatUp 8s linear infinite;
+      opacity: 0.7;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-120vh) scale(1.6); opacity: 0; }
+    }
+
+    /* Game */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      max-width: 360px;
+      margin: auto;
+    }
+
+    .card {
+      height: 80px;
+      background: white;
+      border-radius: 12px;
+      font-size: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,.2);
+      transition: transform .3s;
+    }
+
+    .card:hover {
+      transform: scale(1.1);
+    }
+
+    .matched {
+      background: #ffb703;
+      cursor: default;
+    }
+
+    /* Celebration */
+    .boom {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle, rgba(255,215,128,.9), rgba(255,100,100,.85));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.2rem;
+      color: white;
+      z-index: 99;
+      animation: boom 1.2s ease forwards;
+    }
+
+    @keyframes boom {
+      from { opacity: 0; transform: scale(.3); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    footer {
+      background: #3b1f14;
+      color: white;
+      text-align: center;
+      padding: 30px;
+    }
+  </style>
+</head>
+
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const quotes = [
+  "A successful marriage is built on trust, patience, and endless love.",
+  "Two hearts, one journey, growing stronger with every year.",
+  "Marriage is not about perfection, it is about partnership.",
+  "True love is choosing the same person every single day.",
+  "With time, love matures into companionship and peace."
+];
+
+const icons = ["♥","♥","💍","💍","🌸","🌸","✨","✨"];
+
+function shuffle(arr) {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
+function FloatingHearts() {
+  const [hearts, setHearts] = useState([]);
+
+  useEffect(() => {
+    const i = setInterval(() => {
+      setHearts(h => [
+        ...h,
+        {
+          id: Math.random(),
+          left: Math.random() * 100,
+          size: 14 + Math.random() * 24
+        }
+      ]);
+    }, 700);
+    return () => clearInterval(i);
+  }, []);
+
+  return hearts.map(h => (
+    <div
+      key={h.id}
+      className="heart"
+      style={{ left: h.left + "%", fontSize: h.size }}
+    >
+      ♥
+    </div>
+  ));
+}
+
+function QuoteRotator() {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setI(v => (v + 1) % quotes.length), 4000);
+    return () => clearInterval(t);
+  }, []);
+  return <div className="quote">“{quotes[i]}”</div>;
+}
+
+function MemoryGame({ onWin }) {
+  const [cards] = useState(shuffle(icons));
+  const [open, setOpen] = useState([]);
+  const [matched, setMatched] = useState([]);
+
+  function click(i) {
+    if (open.length === 2 || matched.includes(i)) return;
+    const next = [...open, i];
+    setOpen(next);
+
+    if (next.length === 2) {
+      const [a, b] = next;
+      if (cards[a] === cards[b]) setMatched([...matched, a, b]);
+      setTimeout(() => setOpen([]), 700);
+    }
+  }
+
+  useEffect(() => {
+    if (matched.length === cards.length) onWin();
+  }, [matched]);
+
+  return (
+    <div className="grid">
+      {cards.map((c, i) => (
+        <div
+          key={i}
+          className={`card ${matched.includes(i) ? "matched" : ""}`}
+          onClick={() => click(i)}
+        >
+          {(open.includes(i) || matched.includes(i)) ? c : "❓"}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function App() {
+  const [boom, setBoom] = useState(false);
+
+  return (
+    <>
+      <header>
+        <div>
+          <h1>Happy Marriage Anniversary</h1>
+          <p>A bond that grows stronger with time</p>
+        </div>
+      </header>
+
+      <section>
+        <h2 className="title">Introduction</h2>
+        <div className="glass">
+          Marriage is a journey of shared dreams, quiet sacrifices,
+          and unwavering companionship. Today, we celebrate love that lasts.
+        </div>
+      </section>
+
+      <section>
+        <h2 className="title">Words of Love</h2>
+        <div className="glass">
+          <QuoteRotator />
+        </div>
+      </section>
+
+      <section>
+        <h2 className="title">A Song for the Couple</h2>
+        <div className="glass">
+          <iframe
+            width="100%"
+            height="315"
+            src="Aaj_Se_Teri_Akshay_Kumar_Radhika_Apte_Arijit_Singh_Amit_Trivedi_Padman_1080P.mp4"
+            title="Anniversary Song"
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+          ></iframe>
+        </div>
+      </section>
+
+      <section>
+        <h2 className="title">Play & Celebrate</h2>
+        <div className="glass">
+          <p>Match the cards to unlock the celebration</p>
+          <MemoryGame onWin={() => setBoom(true)} />
+        </div>
+      </section>
+
+      <footer>
+        Crafted with ♥ to celebrate love, partnership, and forever
+      </footer>
+
+      <FloatingHearts />
+
+      {boom && <div className="boom" onClick={() => setBoom(false)}>
+        🎉 Happy Anniversary 🎉
+      </div>}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
